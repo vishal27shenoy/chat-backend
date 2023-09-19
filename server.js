@@ -9,7 +9,7 @@ const generateUniqueId = require("generate-unique-id");
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-const PORT = 5000;
+const PORT = "https://chat-app-backend-1iq1.onrender.com";
 connectDB();
 
 app.use("/register", require("./routes/userRegister"));
