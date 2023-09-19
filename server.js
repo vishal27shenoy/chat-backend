@@ -28,8 +28,9 @@ mongoose.connection.once("open", () => {
 
 const io = socket(server, {
 	cors: {
-		origin: "http://localhost:3000",
-		credentials: false,
+		origin: "*",
+		methods: ["GET", "POST","PUT"], // You can specify the allowed HTTP methods if needed
+		credentials: false, // Set to true if you want to allow credentials (cookies, etc.) to be sent with requests
 	},
 });
 onlineUsers = new Map();
