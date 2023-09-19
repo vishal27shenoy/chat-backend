@@ -9,7 +9,7 @@ const generateUniqueId = require("generate-unique-id");
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-const PORT = "https://chat-app-backend-1iq1.onrender.com";
+const PORT = 5000;
 connectDB();
 
 app.use("/register", require("./routes/userRegister"));
@@ -29,7 +29,7 @@ mongoose.connection.once("open", () => {
 const io = socket(server, {
 	cors: {
 		origin: "http://localhost:3000",
-		credentials: true,
+		credentials: false,
 	},
 });
 onlineUsers = new Map();
