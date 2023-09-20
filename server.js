@@ -45,10 +45,17 @@ io.on("connection", (socket) => {
 	socket.on("set-users", (data) => {
 		console.log(data)
 		const { from, to } = data.data;
-		const uniqueId = generateUniqueId({ length: 6 });
-		onlineUsers.set(from + to, uniqueId);
-		onlineUsers.set(to + from, uniqueId);
-		socket.join(uniqueId);
+		if (!onlineUsers.has(from + to) || !onlineUsers.has(to + from)) {
+			const uniqueId = generateUniqueId({ length: 6 });
+			onlineUsers.set(from + to, uniqueId);
+			onlineUsers.set(to + from, uniqueId);
+			socket.join(uniqueId);
+		} else {
+			let roomId =
+				onlineUsers.get(from + to) ||
+				onlineUsers.get(to + from);
+			socket.join(roomId);
+		}
 	});
 
 	socket.on("send-message", (data) => {
@@ -56,14 +63,14 @@ io.on("connection", (socket) => {
 		const {from , to} = data.data;
 		if (onlineUsers.has(from+to) || onlineUsers.has(to+from)) {
 			let roomId = onlineUsers.get(from+to) || onlineUsers.get(to+from);
-			socket.join(roomId)
+			// socket.join(roomId)
 			let value = { text: data.text, id: from };
 			socket.broadcast.in(roomId).emit("msg-recieve", value);
 		}else{
 			let roomId =
 				onlineUsers.get(from + to) ||
 				onlineUsers.get(to + from);
-			socket.join(roomId);
+			// socket.join(roomId);
 			let value = {text :data.text,id:from}
 			socket.in(roomId).emit("msg-recieve", value);
 		}
