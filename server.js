@@ -63,14 +63,14 @@ io.on("connection", (socket) => {
 		if (onlineUsers.has(from+to) || onlineUsers.has(to+from)) {
 			let roomId = onlineUsers.get(from+to) || onlineUsers.get(to+from);
 			socket.join(roomId)
-			let value = { text: data.text, id: from };
+			let value = { text: data.text, sender: from, receiver:to };
 			socket.broadcast.in(roomId).emit("msg-recieve", value);
 		}else{
 			let roomId =
 				onlineUsers.get(from + to) ||
 				onlineUsers.get(to + from);
 			socket.join(roomId);
-			let value = {text :data.text,id:from}
+			let value = { text: data.text, sender: from, receiver: to };
 			socket.in(roomId).emit("msg-recieve", value);
 		}
 	});
