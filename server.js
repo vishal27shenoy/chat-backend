@@ -59,11 +59,11 @@ io.on("connection", (socket) => {
 			socket.join(roomId)
 			socket.broadcast.in(roomId).emit("msg-recieve", data.text);
 		}else{
-			const uniqueId = generateUniqueId({ length: 6 });
-			onlineUsers.set(from + to, uniqueId);
-			onlineUsers.set(to + from, uniqueId);
-			socket.join(uniqueId);
-			socket.broadcast.in(uniqueId).emit("msg-recieve", data.text);
+			let roomId =
+				onlineUsers.get(from + to) ||
+				onlineUsers.get(to + from);
+			socket.join(roomId);
+			socket.in(roomId).emit("msg-recieve", data.text);
 		}
 	});
 });
