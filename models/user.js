@@ -12,6 +12,7 @@ const Schema = new mongoose.Schema(
 		},
         profileUrl:{
             type:String,
+			default:"",
         },
 		password: {
 			required: true,

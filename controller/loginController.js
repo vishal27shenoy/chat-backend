@@ -11,13 +11,17 @@ const handleLogin = async (req, res) => {
 					_id: user._id,
 					username: user.username,
 					email: user.email,
+					profileUrl:user.profileUrl,
 					message: "Successful",
 				});
 			} else {
-				res.status(400).send({ message: "UnSuccessful" });
+				res.status(401).send({ message1: "Login Failed",message2:"Invalid Credentials" });
 			}
 		} else {
-			res.status(400);
+			res.status(503).send({
+				message1: "Server Error",
+				message2: "Server is under maintainance",
+			});
 		}
 	}
 };

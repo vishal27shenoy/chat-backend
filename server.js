@@ -6,7 +6,9 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/databaseConnection");
 const socket = require("socket.io");
 const generateUniqueId = require("generate-unique-id");
-app.use(cors());
+app.use(cors({
+	origin:'*'
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const PORT = 5000;
@@ -17,6 +19,7 @@ app.use("/login", require("./routes/userLogin"));
 app.use("/addmessage", require("./routes/addMessageRoute"));
 app.use("/getmessage", require("./routes/messageList"));
 app.use("/getUsers", require("./routes/getAllUserRoute"));
+app.use("/profile", require("./routes/profileRoute"));
 
 const server = http.createServer(app); // Create an HTTP server
 mongoose.connection.once("open", () => {
@@ -29,8 +32,8 @@ mongoose.connection.once("open", () => {
 const io = socket(server, {
 	cors: {
 		origin: "*",
-		methods: ["GET", "POST","PUT"], // You can specify the allowed HTTP methods if needed
-		credentials: false, // Set to true if you want to allow credentials (cookies, etc.) to be sent with requests
+		methods: ["GET", "POST","PUT"], 
+		credentials: false,
 	},
 });
 onlineUsers = new Map();
@@ -39,20 +42,22 @@ io.on("connection", (socket) => {
 		console.log(userId)
 	});
 
+	socket.on("set-users", (data) => {
+		console.log(data)
+		const { from, to } = data.data;
+		const uniqueId = generateUniqueId({ length: 6 });
+		onlineUsers.set(from + to, uniqueId);
+		onlineUsers.set(to + from, uniqueId);
+		socket.join(uniqueId);
+	});
+
 	socket.on("send-message", (data) => {
 		console.log(data)
 		const {from , to} = data.data;
 		if (onlineUsers.has(from+to) || onlineUsers.has(to+from)) {
 			let roomId = onlineUsers.get(from+to) || onlineUsers.get(to+from);
-			console.log(roomId)
 			socket.join(roomId)
 			socket.broadcast.in(roomId).emit("msg-recieve", data.text);
-		}else{
-			const uniqueId = generateUniqueId({ length: 6 });
-			console.log(uniqueId)
-			onlineUsers.set(from + to, uniqueId);
-			onlineUsers.set(to + from, uniqueId);
-			socket.broadcast.in(uniqueId).emit("msg-recieve", data.text);
 		}
 	});
 });
