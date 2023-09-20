@@ -57,13 +57,15 @@ io.on("connection", (socket) => {
 		if (onlineUsers.has(from+to) || onlineUsers.has(to+from)) {
 			let roomId = onlineUsers.get(from+to) || onlineUsers.get(to+from);
 			socket.join(roomId)
-			socket.broadcast.in(roomId).emit("msg-recieve", data.text);
+			let value = { text: data.text, id: from };
+			socket.broadcast.in(roomId).emit("msg-recieve", value);
 		}else{
 			let roomId =
 				onlineUsers.get(from + to) ||
 				onlineUsers.get(to + from);
 			socket.join(roomId);
-			socket.in(roomId).emit("msg-recieve", data.text);
+			let value = {text :data.text,id:from}
+			socket.in(roomId).emit("msg-recieve", value);
 		}
 	});
 });
