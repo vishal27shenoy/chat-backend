@@ -1,5 +1,5 @@
 const express = require("express");
 const router = express.Router();
 const messageController = require("../controller/messageController");
-router.get("/", messageController.handleMeaasge);
+router.post("/", messageController.handleMeaasge);
 module.exports = router;
