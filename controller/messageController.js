@@ -7,7 +7,8 @@ const handleMeaasge = async (req, res) => {
 			.find({
 				$and: [{ sender: senderId }, { receiver: receiverId }],
 			})
-			.sort({ updatedAt: 1 });
+			.sort({ updatedAt: 1 })
+			.exec();;
         res.status(200).send({
             messages:messageList
         });
