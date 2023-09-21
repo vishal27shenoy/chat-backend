@@ -3,10 +3,11 @@ const handleMeaasge = async (req, res) => {
 	const { senderId, receiverId } = req.body;
 	console.log(req.body);
 	if (senderId != null && receiverId != null) {
-		let messageList =message.find({
+		let messageList = message
+			.find({
 				$and: [{ sender: senderId }, { receiver: receiverId }],
 			})
-			.sort({ createdAt: 1 });
+			.sort({ updatedAt: 1 });
         res.status(200).send({
             messages:messageList
         });
