@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
 			const uniqueId = generateUniqueId({ length: 6 });
 			onlineUsers.set(from + to, uniqueId);
 			onlineUsers.set(to + from, uniqueId);
-			socket.join(roomId);
+			socket.join(uniqueId);
 		} else {
 			let roomId =
 				onlineUsers.get(from + to) ||
