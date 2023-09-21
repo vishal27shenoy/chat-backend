@@ -51,12 +51,6 @@ io.on("connection", (socket) => {
 			const uniqueId = generateUniqueId({ length: 6 });
 			onlineUsers.set(from + to, uniqueId);
 			onlineUsers.set(to + from, uniqueId);
-			socket.join(uniqueId);
-		} else {
-			let roomId =
-				onlineUsers.get(from + to) ||
-				onlineUsers.get(to + from);
-			socket.join(roomId);
 		}
 	});
 
@@ -70,13 +64,6 @@ io.on("connection", (socket) => {
 			socket.join(roomId);
 			let value = { text: data.text, sender: from, receiver: to };
 			socket.broadcast.in(roomId).emit("msg-recieve", value);
-		} else {
-			let roomId =
-				onlineUsers.get(from + to) ||
-				onlineUsers.get(to + from);
-			socket.join(roomId);
-			let value = { text: data.text, sender: from, receiver: to };
-			socket.in(roomId).emit("msg-recieve", value);
-		}
+		} 
 	});
 });
