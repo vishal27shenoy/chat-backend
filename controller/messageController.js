@@ -12,14 +12,14 @@ const handleMeaasge = async (req, res) => {
 			})
 			.sort({ updatedAt: 1 })
 			.exec();
-        res.status(200).send({
-            messages:messageList
-        });
-	}else{
-        res.status(500).send({
+		res.status(200).send({
+			messages: messageList,
+		});
+	} else {
+		res.status(500).send({
 			messages: "Server Issue",
 		});
-    }
+	}
 };
 
 module.exports = {

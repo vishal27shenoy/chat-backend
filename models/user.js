@@ -10,10 +10,10 @@ const Schema = new mongoose.Schema(
 			required: true,
 			unique: true,
 		},
-        profileUrl:{
-            type:String,
-			default:"",
-        },
+		profileUrl: {
+			type: String,
+			default: "",
+		},
 		password: {
 			required: true,
 			minlength: 8,

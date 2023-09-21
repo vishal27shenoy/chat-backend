@@ -6,9 +6,11 @@ const mongoose = require("mongoose");
 const connectDB = require("./config/databaseConnection");
 const socket = require("socket.io");
 const generateUniqueId = require("generate-unique-id");
-app.use(cors({
-	origin:'*'
-}));
+app.use(
+	cors({
+		origin: "*",
+	})
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const PORT = 5000;
@@ -32,23 +34,24 @@ mongoose.connection.once("open", () => {
 const io = socket(server, {
 	cors: {
 		origin: "*",
-		methods: ["GET", "POST","PUT"], 
+		methods: ["GET", "POST", "PUT"],
 		credentials: false,
 	},
 });
 onlineUsers = new Map();
 io.on("connection", (socket) => {
 	socket.on("add-user", (userId) => {
-		console.log(userId)
+		console.log(userId);
 	});
 
 	socket.on("set-users", (data) => {
-		console.log(data)
+		console.log(data);
 		const { from, to } = data.data;
 		if (!onlineUsers.has(from + to) || !onlineUsers.has(to + from)) {
 			const uniqueId = generateUniqueId({ length: 6 });
 			onlineUsers.set(from + to, uniqueId);
 			onlineUsers.set(to + from, uniqueId);
+			socket.join(roomId);
 		} else {
 			let roomId =
 				onlineUsers.get(from + to) ||
@@ -58,14 +61,16 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("send-message", (data) => {
-		console.log(data)
-		const {from , to} = data.data;
-		if (onlineUsers.has(from+to) || onlineUsers.has(to+from)) {
-			let roomId = onlineUsers.get(from+to) || onlineUsers.get(to+from);
-			socket.join(roomId)
-			let value = { text: data.text, sender: from, receiver:to };
+		console.log(data);
+		const { from, to } = data.data;
+		if (onlineUsers.has(from + to) || onlineUsers.has(to + from)) {
+			let roomId =
+				onlineUsers.get(from + to) ||
+				onlineUsers.get(to + from);
+			socket.join(roomId);
+			let value = { text: data.text, sender: from, receiver: to };
 			socket.broadcast.in(roomId).emit("msg-recieve", value);
-		}else{
+		} else {
 			let roomId =
 				onlineUsers.get(from + to) ||
 				onlineUsers.get(to + from);

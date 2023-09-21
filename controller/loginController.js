@@ -11,11 +11,14 @@ const handleLogin = async (req, res) => {
 					_id: user._id,
 					username: user.username,
 					email: user.email,
-					profileUrl:user.profileUrl,
+					profileUrl: user.profileUrl,
 					message: "Successful",
 				});
 			} else {
-				res.status(401).send({ message1: "Login Failed",message2:"Invalid Credentials" });
+				res.status(401).send({
+					message1: "Login Failed",
+					message2: "Invalid Credentials",
+				});
 			}
 		} else {
 			res.status(503).send({
