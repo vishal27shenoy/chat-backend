@@ -41,29 +41,12 @@ const io = socket(server, {
 onlineUsers = new Map();
 io.on("connection", (socket) => {
 	socket.on("add-user", (userId) => {
-		console.log(userId);
+		onlineUsers.set(userId, socket.id);
 	});
-
-	socket.on("set-users", (data) => {
-		console.log(data);
-		const { from, to } = data.data;
-		if (!onlineUsers.has(from + to) || !onlineUsers.has(to + from)) {
-			const uniqueId = generateUniqueId({ length: 6 });
-			onlineUsers.set(from + to, uniqueId);
-			onlineUsers.set(to + from, uniqueId);
+	socket.on("send-msg", (data) => {
+		const sendUserSocket = onlineUsers.get(data.to);
+		if (sendUserSocket) {
+			socket.to(sendUserSocket).emit("msg-recieve", data.msg);
 		}
-	});
-
-	socket.on("send-message", (data) => {
-		console.log(data);
-		const { from, to } = data.data;
-		if (onlineUsers.has(from + to) || onlineUsers.has(to + from)) {
-			let roomId =
-				onlineUsers.get(from + to) ||
-				onlineUsers.get(to + from);
-			socket.join(roomId);
-			let value = { text: data.text, sender: from, receiver: to };
-			socket.broadcast.in(roomId).emit("msg-recieve", value);
-		} 
 	});
 });
