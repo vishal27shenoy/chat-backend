@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
 	});
 	socket.on("send-msg", (data) => {
 		const sendUserSocket = onlineUsers.get(data.data.to);
-		console.log(data)
+		console.log(data,sendUserSocket);
 		if (sendUserSocket) {
 			socket.to(sendUserSocket).emit("msg-recieve", data);
 		}
