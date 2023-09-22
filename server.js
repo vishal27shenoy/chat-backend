@@ -41,6 +41,7 @@ const io = socket(server, {
 onlineUsers = new Map();
 io.on("connection", (socket) => {
 	socket.on("add-user", (userId) => {
+		console.log(userId,"came here")
 		onlineUsers.set(userId, socket.id);
 	});
 	socket.on("send-msg", (data) => {
