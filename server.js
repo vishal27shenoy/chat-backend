@@ -38,17 +38,29 @@ const io = socket(server, {
 		credentials: false,
 	},
 });
-onlineUsers = new Map();
+let onlineUsers = new Map();
 io.on("connection", (socket) => {
-	socket.on("add-user", (userId) => {
-		console.log(userId,"came here")
-		onlineUsers.set(userId, socket.id);
+
+	socket.on("set-online" ,(userID) => {
+		console.log(userID,socket.id);
+		onlineUsers.set(userID,socket.id);
 	});
-	socket.on("send-msg", (data) => {
-		const sendUserSocket = onlineUsers.get(data.data.to);
-		console.log(data,sendUserSocket);
+
+	socket.on("send-msg", ({text , from ,to}) => {
+		const sendUserSocket = onlineUsers.get(to);
+		console.log(text,from,to,sendUserSocket);
 		if (sendUserSocket) {
-			socket.to(sendUserSocket).emit("msg-recieve", data);
+			console.log("if");
+			socket.to(sendUserSocket).emit("msg-recieve", text , from , to);
+		}else{
+			console.log("else");
+			const sendSendersSocket = onlineUsers.get(from);
+			socket.to(sendSendersSocket).emit("not-online",text,from);
 		}
 	});
+
+	socket.on("disconnect", (from) => {
+		onlineUsers.delete(from)
+	});
+
 });
