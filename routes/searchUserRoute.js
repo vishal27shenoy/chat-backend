@@ -1,5 +1,5 @@
 const express = require("express");
 const router = express.Router();
 const searchUserController = require("../controller/searchUserController");
-router.get("/", searchUserController.searchUser);
+router.post("/", searchUserController.searchUser);
 module.exports = router;
