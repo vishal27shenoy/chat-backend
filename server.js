@@ -22,6 +22,9 @@ app.use("/addmessage", require("./routes/addMessageRoute"));
 app.use("/getmessage", require("./routes/messageList"));
 app.use("/getUsers", require("./routes/getAllUserRoute"));
 app.use("/profile", require("./routes/profileRoute"));
+app.use("/adduser", require("./routes/addUserRoute"));
+app.use("/getContact", require("./routes/getUserContactRoute"));
+app.use("/searchUser", require("./routes/searchUserRoute"));
 
 const server = http.createServer(app); // Create an HTTP server
 mongoose.connection.once("open", () => {

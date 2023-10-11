@@ -19,6 +19,7 @@ const Schema = new mongoose.Schema(
 			minlength: 8,
 			type: String,
 		},
+		userContacts : []
 	},
 	{ timestamps: true }
 );
